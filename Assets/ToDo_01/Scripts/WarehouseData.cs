@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public sealed class WarehouseData : MonoBehaviour, IWarehouseData
+public sealed class WarehouseData : MonoBehaviour , IWarehouseData
 {
-    // Incoming / outgoing 은 먼저 들어온 상자가 먼저 나가는 Queue(FIFO)
+    //Incoming / outgoing 은 먼저 들어온 상자가 먼저 나가는 Queue(FIFO) 
 
     private readonly Queue<ForkliftBox> incomingQueue = new Queue<ForkliftBox>();
     private readonly Queue<ForkliftBox> outgoingQueue = new Queue<ForkliftBox>();
 
-    // 전재 공간은 나중에 올린 상자를 먼저 꺼내는 Stack(LIFO)
-    // stackIndex 마다 하나의 stack을 관리 한다.
+    //전재 공간은 나중에 올린 상자를 먼저 꺼내느 Stack(LIFO)
+    //stackIndex 마다 하나의 stack를 관리 한다. 
 
     private readonly Dictionary<int, Stack<ForkliftBox>> stacks = new Dictionary<int, Stack<ForkliftBox>>();
 
@@ -23,7 +23,7 @@ public sealed class WarehouseData : MonoBehaviour, IWarehouseData
         stacks.Clear();
     }
 
-    // incomingQueue
+    //Incoming Queue
     public void EnqueueIncoming(ForkliftBox box)
     {
         if (box == null)
@@ -36,7 +36,7 @@ public sealed class WarehouseData : MonoBehaviour, IWarehouseData
 
     public ForkliftBox PeekIncoming()
     {
-        if (incomingQueue.Count == 0)
+        if(incomingQueue.Count == 0)
         {
             return null;
         }
@@ -59,7 +59,7 @@ public sealed class WarehouseData : MonoBehaviour, IWarehouseData
         return incomingQueue.ToArray();
     }
 
-    // outgoingQueue
+    //Outgoing Queue
 
     public void EnqueueOutgoing(ForkliftBox box)
     {
@@ -73,7 +73,7 @@ public sealed class WarehouseData : MonoBehaviour, IWarehouseData
 
     public ForkliftBox PeekOutgoing()
     {
-        if (incomingQueue.Count == 0)
+        if (outgoingQueue.Count == 0)
         {
             return null;
         }
@@ -83,7 +83,7 @@ public sealed class WarehouseData : MonoBehaviour, IWarehouseData
 
     public ForkliftBox DequeueOutgoing()
     {
-        if (incomingQueue.Count == 0)
+        if (outgoingQueue.Count == 0)
         {
             return null;
         }
@@ -96,9 +96,9 @@ public sealed class WarehouseData : MonoBehaviour, IWarehouseData
         return outgoingQueue.ToArray();
     }
 
-    // stack
+    //Stack
 
-    // 해당 번호의 stack이 없으면 새로 만들어서 반환
+    //해당 번호의 stack 이 없으면 새로 만들어서 반환 
     private Stack<ForkliftBox> GetOrCreateStack(int stackIndex)
     {
         if (!stacks.TryGetValue(stackIndex, out Stack<ForkliftBox> stack))
@@ -114,7 +114,6 @@ public sealed class WarehouseData : MonoBehaviour, IWarehouseData
     {
         return GetOrCreateStack(stackIndex).Count;
     }
-
     public void PushStack(int stackIndex, ForkliftBox box)
     {
         if (box == null)
@@ -124,11 +123,9 @@ public sealed class WarehouseData : MonoBehaviour, IWarehouseData
 
         GetOrCreateStack(stackIndex).Push(box);
     }
-
     public ForkliftBox PeekStack(int stackIndex)
     {
         Stack<ForkliftBox> stack = GetOrCreateStack(stackIndex);
-
         if (stack.Count == 0)
         {
             return null;
@@ -147,4 +144,5 @@ public sealed class WarehouseData : MonoBehaviour, IWarehouseData
 
         return stack.Pop();
     }
+
 }
